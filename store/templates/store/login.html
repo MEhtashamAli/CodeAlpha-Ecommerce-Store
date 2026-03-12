@@ -1,0 +1,58 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}Sign In — Foey{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <a href="{% url 'store:home' %}" class="navbar-logo auth-logo">Fo<span>e</span>y</a>
+        <h1 class="auth-title">Welcome Back</h1>
+        <p class="auth-subtitle">Sign in to your Foey account</p>
+      </div>
+
+      {% if errors %}
+      <div class="auth-errors">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <div>
+          {% for error in errors %}
+          <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <form method="post" action="{% url 'store:login' %}" class="auth-form">
+        {% csrf_token %}
+        {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+
+        <div class="form-group">
+          <label for="username">Username</label>
+          <div class="input-icon-wrap">
+            <i class="fa-regular fa-user"></i>
+            <input type="text" name="username" id="username" required value="{{ form.username|default:'' }}" placeholder="Enter your username">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <div class="input-icon-wrap">
+            <i class="fa-solid fa-lock"></i>
+            <input type="password" name="password" id="password" required placeholder="Enter your password">
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary auth-submit">
+          Sign In <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Don't have an account? <a href="{% url 'store:register' %}">Create one</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

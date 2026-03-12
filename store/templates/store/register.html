@@ -1,0 +1,85 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}Create Account — Foey{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <a href="{% url 'store:home' %}" class="navbar-logo auth-logo">Fo<span>e</span>y</a>
+        <h1 class="auth-title">Create Account</h1>
+        <p class="auth-subtitle">Join Foey for the freshest trends and an unbeatable shopping experience</p>
+      </div>
+
+      {% if errors %}
+      <div class="auth-errors">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <div>
+          {% for error in errors %}
+          <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <form method="post" action="{% url 'store:register' %}" class="auth-form">
+        {% csrf_token %}
+
+        <div class="form-row form-row-2">
+          <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" name="first_name" id="first_name" value="{{ form.first_name|default:'' }}" placeholder="John">
+          </div>
+          <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" name="last_name" id="last_name" value="{{ form.last_name|default:'' }}" placeholder="Doe">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="username">Username *</label>
+          <div class="input-icon-wrap">
+            <i class="fa-regular fa-user"></i>
+            <input type="text" name="username" id="username" required value="{{ form.username|default:'' }}" placeholder="Choose a username">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email *</label>
+          <div class="input-icon-wrap">
+            <i class="fa-regular fa-envelope"></i>
+            <input type="email" name="email" id="email" required value="{{ form.email|default:'' }}" placeholder="you@example.com">
+          </div>
+        </div>
+
+        <div class="form-row form-row-2">
+          <div class="form-group">
+            <label for="password">Password *</label>
+            <div class="input-icon-wrap">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" name="password" id="password" required minlength="6" placeholder="Min 6 characters">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="password2">Confirm Password *</label>
+            <div class="input-icon-wrap">
+              <i class="fa-solid fa-lock"></i>
+              <input type="password" name="password2" id="password2" required placeholder="Repeat password">
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-primary auth-submit">
+          Create Account <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>Already have an account? <a href="{% url 'store:login' %}">Sign in</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

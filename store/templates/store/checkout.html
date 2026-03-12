@@ -1,0 +1,139 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}Checkout — Foey{% endblock %}
+{% block meta_description %}Complete your Foey order. Secure checkout with free shipping on orders over $100.{% endblock %}
+
+{% block content %}
+<div class="breadcrumb-bar">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{% url 'store:home' %}">Home</a>
+      <span class="bc-sep"><i class="fa-solid fa-chevron-right"></i></span>
+      <span class="bc-current">Checkout</span>
+    </nav>
+  </div>
+</div>
+
+<section class="checkout-section">
+  <div class="container">
+    {% if errors %}
+    <div class="checkout-errors">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <div>
+        {% for error in errors %}
+        <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'store:checkout' %}" class="checkout-grid" id="checkout-form">
+      {% csrf_token %}
+
+      <!-- Left: Shipping Form -->
+      <div class="checkout-form">
+        <div class="checkout-card">
+          <h2 class="checkout-card-title"><i class="fa-solid fa-user"></i> Contact Information</h2>
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label for="first_name">First Name *</label>
+              <input type="text" name="first_name" id="first_name" required value="{{ form.first_name|default:'' }}">
+            </div>
+            <div class="form-group">
+              <label for="last_name">Last Name *</label>
+              <input type="text" name="last_name" id="last_name" required value="{{ form.last_name|default:'' }}">
+            </div>
+          </div>
+          <div class="form-row form-row-2">
+            <div class="form-group">
+              <label for="email">Email *</label>
+              <input type="email" name="email" id="email" required value="{{ form.email|default:'' }}">
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone</label>
+              <input type="tel" name="phone" id="phone" value="{{ form.phone|default:'' }}">
+            </div>
+          </div>
+        </div>
+
+        <div class="checkout-card">
+          <h2 class="checkout-card-title"><i class="fa-solid fa-truck-fast"></i> Shipping Address</h2>
+          <div class="form-group">
+            <label for="address">Street Address *</label>
+            <input type="text" name="address" id="address" required value="{{ form.address|default:'' }}">
+          </div>
+          <div class="form-row form-row-3">
+            <div class="form-group">
+              <label for="city">City *</label>
+              <input type="text" name="city" id="city" required value="{{ form.city|default:'' }}">
+            </div>
+            <div class="form-group">
+              <label for="state">State</label>
+              <input type="text" name="state" id="state" value="{{ form.state|default:'' }}">
+            </div>
+            <div class="form-group">
+              <label for="zip_code">ZIP Code *</label>
+              <input type="text" name="zip_code" id="zip_code" required value="{{ form.zip_code|default:'' }}">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="country">Country</label>
+            <input type="text" name="country" id="country" value="{{ form.country|default:'United States' }}">
+          </div>
+          <div class="form-group">
+            <label for="note">Order Notes (optional)</label>
+            <textarea name="note" id="note" rows="3" placeholder="Special instructions for delivery...">{{ form.note|default:'' }}</textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Order Summary -->
+      <div class="checkout-summary">
+        <div class="checkout-card checkout-summary-card">
+          <h2 class="checkout-card-title"><i class="fa-solid fa-bag-shopping"></i> Order Summary</h2>
+
+          <div class="checkout-items">
+            {% for item in cart_items %}
+            <div class="checkout-item">
+              <div class="checkout-item-img">
+                <img src="{% static item.product.image %}" alt="{{ item.product.name }}">
+                <span class="checkout-item-qty">{{ item.quantity }}</span>
+              </div>
+              <div class="checkout-item-info">
+                <div class="checkout-item-name">{{ item.product.name }}</div>
+                <div class="checkout-item-price">${{ item.line_total }}</div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+
+          <div class="checkout-totals">
+            <div class="checkout-total-row">
+              <span>Subtotal</span>
+              <span>${{ subtotal }}</span>
+            </div>
+            <div class="checkout-total-row">
+              <span>Shipping</span>
+              <span>{% if shipping == "0.00" %}<span class="free-badge">FREE</span>{% else %}${{ shipping }}{% endif %}</span>
+            </div>
+            <div class="checkout-total-row checkout-grand-total">
+              <span>Total</span>
+              <span class="checkout-total-value">${{ total }}</span>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-primary checkout-place-btn" id="place-order-btn">
+            <i class="fa-solid fa-lock"></i> Place Order
+          </button>
+
+          <div class="checkout-secure">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Secured with 256-bit SSL encryption</span>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+{% endblock %}

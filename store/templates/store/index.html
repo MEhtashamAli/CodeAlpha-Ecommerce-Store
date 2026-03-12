@@ -1,0 +1,349 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Foey — Your go-to destination for trendy fashion, accessories, and lifestyle essentials. Fresh collections, worldwide shipping.">
+  <title>Foey — Trendy Fashion & Lifestyle</title>
+  <link rel="stylesheet" href="{% static 'store/css/index.css' %}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+</head>
+<body>
+
+  <!-- ===== Navigation ===== -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <a href="{% url 'store:home' %}" class="navbar-logo">Fo<span>e</span>y</a>
+      <ul class="navbar-links" id="nav-links">
+        <li><a href="#categories">Collections</a></li>
+        <li><a href="#products">Shop</a></li>
+        <li><a href="#promo">Offers</a></li>
+        <li><a href="#newsletter">Contact</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <button id="search-btn" aria-label="Search"><i class="fa-solid fa-magnifying-glass"></i></button>
+        {% if user.is_authenticated %}
+        <div class="nav-user-menu">
+          <button id="user-btn" aria-label="Account" class="nav-user-btn">
+            <i class="fa-solid fa-user"></i>
+            <span class="nav-user-name">{{ user.first_name|default:user.username }}</span>
+          </button>
+          <div class="nav-user-dropdown" id="user-dropdown">
+            <div class="dropdown-greeting">Hi, {{ user.first_name|default:user.username }}!</div>
+            <a href="{% url 'store:logout' %}" class="dropdown-item"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</a>
+          </div>
+        </div>
+        {% else %}
+        <a href="{% url 'store:login' %}" class="nav-auth-link" id="user-btn" aria-label="Sign In">
+          <i class="fa-regular fa-user"></i>
+        </a>
+        {% endif %}
+        <button id="cart-btn" aria-label="Cart">
+          <i class="fa-solid fa-bag-shopping"></i>
+          <span class="cart-count">{{ cart_count }}</span>
+        </button>
+      </div>
+      <div class="menu-toggle" id="menu-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===== Hero Section ===== -->
+  <section class="hero" id="hero">
+    <div class="container hero-inner">
+      <div class="hero-content">
+        <div class="hero-badge"><span class="dot"></span> Fresh Drops 2026</div>
+        <h1 class="hero-title">Find Your <span class="highlight">Vibe</span>, Own Your Look</h1>
+        <p class="hero-description">Trending styles handpicked for you. From streetwear to statement pieces — Foey has everything you need to stand out.</p>
+        <div class="hero-cta">
+          <a href="#products" class="btn-primary">Shop Now <i class="fa-solid fa-arrow-right"></i></a>
+          <a href="#categories" class="btn-secondary">Explore Collections</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat-item">
+            <div class="stat-number">{{ stats.products }}</div>
+            <div class="stat-label">Products</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">{{ stats.satisfaction }}</div>
+            <div class="stat-label">Satisfaction</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">{{ stats.brands }}</div>
+            <div class="stat-label">Brands</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-image-wrapper">
+          <img src="{% static 'store/images/hero_sneakers.png' %}" alt="Premium white sneakers — featured product" id="hero-img">
+          <div class="floating-tag tag-price">
+            <div class="tag-label">Starting from</div>
+            <div class="tag-value">${{ featured_product.price }}</div>
+          </div>
+          <div class="floating-tag tag-rating">
+            <div class="tag-label">Rating</div>
+            <div class="tag-stars">★★★★★</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Marquee ===== -->
+  <section class="marquee-section">
+    <div class="marquee-track">
+      <span class="marquee-item"><span class="diamond">◆</span> Free Worldwide Shipping</span>
+      <span class="marquee-item"><span class="diamond">◆</span> Authentic Guarantee</span>
+      <span class="marquee-item"><span class="diamond">◆</span> 30-Day Returns</span>
+      <span class="marquee-item"><span class="diamond">◆</span> Secure Checkout</span>
+      <span class="marquee-item"><span class="diamond">◆</span> 24/7 Support</span>
+      <span class="marquee-item"><span class="diamond">◆</span> Exclusive Members Rewards</span>
+      <span class="marquee-item"><span class="diamond">◆</span> Free Worldwide Shipping</span>
+      <span class="marquee-item"><span class="diamond">◆</span> Authentic Guarantee</span>
+      <span class="marquee-item"><span class="diamond">◆</span> 30-Day Returns</span>
+      <span class="marquee-item"><span class="diamond">◆</span> Secure Checkout</span>
+      <span class="marquee-item"><span class="diamond">◆</span> 24/7 Support</span>
+      <span class="marquee-item"><span class="diamond">◆</span> Exclusive Members Rewards</span>
+    </div>
+  </section>
+
+  <!-- ===== Categories ===== -->
+  <section class="categories" id="categories">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">Browse by Category</div>
+        <h2 class="section-title">Curated Collections</h2>
+        <p class="section-subtitle">Explore our carefully curated categories, each tailored to your lifestyle and taste.</p>
+      </div>
+      <div class="categories-grid">
+        {% for category in categories %}
+        <div class="category-card reveal reveal-delay-{{ forloop.counter }}" id="cat-{{ category.slug }}">
+          <div class="category-icon">{{ category.icon }}</div>
+          <div class="category-name">{{ category.name }}</div>
+          <div class="category-count">{{ category.count }} items</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Products ===== -->
+  <section class="products" id="products">
+    <div class="container">
+      <div class="section-header reveal">
+        <div class="section-label">Our Selection</div>
+        <h2 class="section-title">Trending This Season</h2>
+        <p class="section-subtitle">The latest drops and bestsellers hand‑picked by our style experts.</p>
+      </div>
+      <div class="products-tabs reveal">
+        <button class="tab-btn active" data-filter="all" id="tab-all">All</button>
+        <button class="tab-btn" data-filter="new" id="tab-new">New Arrivals</button>
+        <button class="tab-btn" data-filter="best" id="tab-best">Best Sellers</button>
+        <button class="tab-btn" data-filter="sale" id="tab-sale">On Sale</button>
+      </div>
+      <div class="products-grid">
+        {% for product in products %}
+        <div class="product-card reveal reveal-delay-{{ forloop.counter|add:0 }}" data-tag="{{ product.tag }}" id="product-{{ product.id }}">
+          <a href="{% url 'store:product_detail' product.slug %}" class="product-card-link">
+            <div class="product-image">
+              <img src="{% static product.image %}" alt="{{ product.name }}">
+              {% if product.badge %}
+              <span class="product-badge {{ product.badge_class }}">{{ product.badge }}</span>
+              {% endif %}
+            </div>
+          </a>
+          <div class="product-image-overlay">
+            <button class="product-wishlist" aria-label="Add to wishlist"><i class="fa-regular fa-heart"></i></button>
+            <div class="product-quick-actions">
+              <button class="quick-add-btn" data-product-id="{{ product.id }}" id="add-{{ product.slug }}">Add to Cart</button>
+            </div>
+          </div>
+          <a href="{% url 'store:product_detail' product.slug %}" class="product-info-link">
+            <div class="product-info">
+              <div class="product-category">{{ product.category }}</div>
+              <div class="product-name">{{ product.name }}</div>
+              <div class="product-rating">
+                <span class="stars">{{ product.stars }}</span>
+                <span class="rating-count">({{ product.reviews }})</span>
+              </div>
+              <div class="product-price">
+                <span class="price-current">${{ product.price }}</span>
+                {% if product.original_price %}
+                <span class="price-original">${{ product.original_price }}</span>
+                {% endif %}
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Promo Banner ===== -->
+  <section class="promo-banner" id="promo">
+    <div class="container">
+      <div class="promo-inner reveal">
+        <div class="promo-content">
+          <div class="promo-label">Limited Time Offer</div>
+          <h2 class="promo-title">Spring Sale — Up to 40% Off</h2>
+          <p class="promo-description">Don't sleep on our biggest sale of the season. Trending styles at unbeatable prices — grab them before they're gone!</p>
+          <div class="promo-timer" id="countdown">
+            <div class="timer-block">
+              <span class="timer-value" id="timer-days">02</span>
+              <span class="timer-label">Days</span>
+            </div>
+            <div class="timer-block">
+              <span class="timer-value" id="timer-hours">14</span>
+              <span class="timer-label">Hours</span>
+            </div>
+            <div class="timer-block">
+              <span class="timer-value" id="timer-minutes">36</span>
+              <span class="timer-label">Min</span>
+            </div>
+            <div class="timer-block">
+              <span class="timer-value" id="timer-seconds">48</span>
+              <span class="timer-label">Sec</span>
+            </div>
+          </div>
+          <a href="#products" class="btn-primary">Shop the Sale <i class="fa-solid fa-arrow-right"></i></a>
+        </div>
+        <div class="promo-visual">
+          <img src="{% static 'store/images/banner_sale.png' %}" alt="Spring sale promotion">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Features ===== -->
+  <section class="features">
+    <div class="container">
+      <div class="features-grid">
+        <div class="feature-item reveal reveal-delay-1" id="feature-shipping">
+          <div class="feature-icon">🚚</div>
+          <div class="feature-title">Free Shipping</div>
+          <div class="feature-text">Complimentary worldwide delivery on all orders over $100.</div>
+        </div>
+        <div class="feature-item reveal reveal-delay-2" id="feature-returns">
+          <div class="feature-icon">↩️</div>
+          <div class="feature-title">Easy Returns</div>
+          <div class="feature-text">30‑day hassle‑free returns with prepaid labels included.</div>
+        </div>
+        <div class="feature-item reveal reveal-delay-3" id="feature-secure">
+          <div class="feature-icon">🔒</div>
+          <div class="feature-title">Secure Payment</div>
+          <div class="feature-text">SSL encrypted checkout with all major payment methods.</div>
+        </div>
+        <div class="feature-item reveal reveal-delay-4" id="feature-support">
+          <div class="feature-icon">💬</div>
+          <div class="feature-title">24/7 Support</div>
+          <div class="feature-text">Dedicated customer service team available around the clock.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Newsletter ===== -->
+  <section class="newsletter" id="newsletter">
+    <div class="container">
+      <div class="newsletter-inner reveal">
+        <div class="section-label">Stay in Touch</div>
+        <h2 class="newsletter-title">Get Early Access & Exclusive Offers</h2>
+        <p class="newsletter-text">Join 50,000+ style enthusiasts and be the first to know about new drops, sales, and curated looks.</p>
+        <form class="newsletter-form" id="newsletter-form" method="post" action="{% url 'store:subscribe' %}">
+          {% csrf_token %}
+          <input type="email" name="email" placeholder="Enter your email address" required id="newsletter-email">
+          <button type="submit" id="newsletter-submit">Subscribe</button>
+        </form>
+        {% if subscribed %}
+        <p style="color: var(--accent-primary); margin-top: 16px; font-weight: 600;">✓ Thanks for subscribing!</p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="{% url 'store:home' %}" class="navbar-logo">Fo<span>e</span>y</a>
+          <p>Your style, your story. Trendy fashion curated just for you.</p>
+          <div class="social-links">
+            <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fa-brands fa-x-twitter"></i></a>
+            <a href="#" aria-label="Pinterest"><i class="fa-brands fa-pinterest-p"></i></a>
+            <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+          </div>
+        </div>
+        <div class="footer-column">
+          <h4>Shop</h4>
+          <ul>
+            <li><a href="#">New Arrivals</a></li>
+            <li><a href="#">Best Sellers</a></li>
+            <li><a href="#">Sale</a></li>
+            <li><a href="#">Gift Cards</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press</a></li>
+            <li><a href="#">Sustainability</a></li>
+          </ul>
+        </div>
+        <div class="footer-column">
+          <h4>Support</h4>
+          <ul>
+            <li><a href="#">Help Center</a></li>
+            <li><a href="#">Shipping Info</a></li>
+            <li><a href="#">Returns</a></li>
+            <li><a href="#">Size Guide</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 Foey. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===== Cart Drawer ===== -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <aside class="cart-drawer" id="cart-drawer">
+    <div class="cart-drawer-header">
+      <h3 class="cart-drawer-title"><i class="fa-solid fa-bag-shopping"></i> Your Cart</h3>
+      <button class="cart-drawer-close" id="cart-drawer-close" aria-label="Close cart"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div class="cart-drawer-body" id="cart-drawer-body">
+      <!-- Items rendered by JS -->
+      <div class="cart-empty" id="cart-empty">
+        <i class="fa-regular fa-face-smile-wink"></i>
+        <p>Your cart is empty</p>
+        <a href="#products" class="btn-primary" id="cart-shop-link">Start Shopping</a>
+      </div>
+    </div>
+    <div class="cart-drawer-footer" id="cart-drawer-footer">
+      <div class="cart-subtotal">
+        <span>Subtotal</span>
+        <span class="cart-subtotal-value" id="cart-subtotal">$0.00</span>
+      </div>
+      <p class="cart-shipping-note">Shipping & taxes calculated at checkout</p>
+      <button class="btn-primary cart-checkout-btn" id="cart-checkout-btn">Proceed to Checkout <i class="fa-solid fa-arrow-right"></i></button>
+    </div>
+  </aside>
+
+  <script src="{% static 'store/js/index.js' %}"></script>
+</body>
+</html>

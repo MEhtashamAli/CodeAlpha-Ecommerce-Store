@@ -1,0 +1,97 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}Order Confirmed — Foey{% endblock %}
+{% block meta_description %}Your Foey order {{ order.order_number }} has been confirmed.{% endblock %}
+
+{% block content %}
+<section class="confirmation-section">
+  <div class="container">
+    <div class="confirmation-card">
+      <!-- Success header -->
+      <div class="confirmation-header">
+        <div class="confirmation-icon">
+          <i class="fa-solid fa-check"></i>
+        </div>
+        <h1 class="confirmation-title">Order Confirmed!</h1>
+        <p class="confirmation-subtitle">Thank you, {{ order.first_name }}. Your order has been placed successfully.</p>
+      </div>
+
+      <!-- Order number -->
+      <div class="confirmation-order-number">
+        <span class="order-label">Order Number</span>
+        <span class="order-number">{{ order.order_number }}</span>
+      </div>
+
+      <!-- Order details grid -->
+      <div class="confirmation-grid">
+        <!-- Items -->
+        <div class="confirmation-section-block">
+          <h3 class="confirmation-section-title">Items Ordered</h3>
+          {% for item in order.items.all %}
+          <div class="confirmation-item">
+            <div class="confirmation-item-img">
+              {% if item.product_image %}
+              <img src="{% static item.product_image %}" alt="{{ item.product_name }}">
+              {% endif %}
+            </div>
+            <div class="confirmation-item-info">
+              <div class="confirmation-item-name">{{ item.product_name }}</div>
+              <div class="confirmation-item-meta">Qty: {{ item.quantity }} &times; ${{ item.price }}</div>
+            </div>
+            <div class="confirmation-item-total">${{ item.line_total }}</div>
+          </div>
+          {% endfor %}
+        </div>
+
+        <!-- Shipping & Payment -->
+        <div class="confirmation-details">
+          <div class="confirmation-section-block">
+            <h3 class="confirmation-section-title">Shipping Address</h3>
+            <p>{{ order.first_name }} {{ order.last_name }}</p>
+            <p>{{ order.address }}</p>
+            <p>{{ order.city }}{% if order.state %}, {{ order.state }}{% endif %} {{ order.zip_code }}</p>
+            <p>{{ order.country }}</p>
+            {% if order.phone %}<p>{{ order.phone }}</p>{% endif %}
+          </div>
+
+          <div class="confirmation-section-block">
+            <h3 class="confirmation-section-title">Order Totals</h3>
+            <div class="confirmation-totals">
+              <div class="confirmation-total-row">
+                <span>Subtotal</span>
+                <span>${{ order.subtotal }}</span>
+              </div>
+              <div class="confirmation-total-row">
+                <span>Shipping</span>
+                <span>{% if order.shipping == 0 %}FREE{% else %}${{ order.shipping }}{% endif %}</span>
+              </div>
+              <div class="confirmation-total-row confirmation-grand-total">
+                <span>Total</span>
+                <span>${{ order.total }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="confirmation-section-block">
+            <h3 class="confirmation-section-title">Status</h3>
+            <div class="status-badge status-{{ order.status }}">
+              <i class="fa-solid fa-circle"></i> {{ order.get_status_display }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Email notice -->
+      <div class="confirmation-notice">
+        <i class="fa-solid fa-envelope"></i>
+        <p>A confirmation email will be sent to <strong>{{ order.email }}</strong> with your order details and tracking information.</p>
+      </div>
+
+      <div class="confirmation-actions">
+        <a href="{% url 'store:home' %}" class="btn-primary">Continue Shopping <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

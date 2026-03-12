@@ -1,0 +1,246 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}{{ product.name }} — Foey{% endblock %}
+{% block meta_description %}Shop {{ product.name }} at Foey. {{ product.category }} — ${{ product.price }}.{% endblock %}
+
+{% block content %}
+<!-- ===== Breadcrumb ===== -->
+<div class="breadcrumb-bar">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{% url 'store:home' %}">Home</a>
+      <span class="bc-sep"><i class="fa-solid fa-chevron-right"></i></span>
+      <a href="{% url 'store:home' %}#products">Shop</a>
+      <span class="bc-sep"><i class="fa-solid fa-chevron-right"></i></span>
+      <span class="bc-current">{{ product.name }}</span>
+    </nav>
+  </div>
+</div>
+
+<!-- ===== Product Detail ===== -->
+<section class="pd-section">
+  <div class="container">
+    <div class="pd-grid">
+      <!-- Image Gallery -->
+      <div class="pd-gallery">
+        <div class="pd-main-image" id="pd-main-image">
+          <img src="{% static product.image %}" alt="{{ product.name }}" id="pd-img">
+          {% if product.badge %}
+          <span class="product-badge {{ product.badge_class }}">{{ product.badge }}</span>
+          {% endif %}
+        </div>
+        <div class="pd-thumbs">
+          <button class="pd-thumb active" data-img="{% static product.image %}">
+            <img src="{% static product.image %}" alt="{{ product.name }} — view 1">
+          </button>
+          <button class="pd-thumb" data-img="{% static product.image %}">
+            <img src="{% static product.image %}" alt="{{ product.name }} — view 2">
+          </button>
+          <button class="pd-thumb" data-img="{% static product.image %}">
+            <img src="{% static product.image %}" alt="{{ product.name }} — view 3">
+          </button>
+        </div>
+      </div>
+
+      <!-- Product Info -->
+      <div class="pd-info">
+        <div class="pd-category">{{ product.category }}</div>
+        <h1 class="pd-name">{{ product.name }}</h1>
+
+        <div class="pd-rating">
+          <span class="stars">{{ product.stars }}</span>
+          <span class="rating-count">({{ product.reviews }} reviews)</span>
+        </div>
+
+        <div class="pd-price-row">
+          <span class="pd-price">${{ product.price }}</span>
+          {% if product.original_price %}
+          <span class="pd-original-price">${{ product.original_price }}</span>
+          <span class="pd-discount">Save ${{ savings }}</span>
+          {% endif %}
+        </div>
+
+        <div class="pd-description">
+          <p>Premium quality {{ product.category|lower }} crafted with meticulous attention to detail. Designed for those who appreciate timeless elegance and modern sophistication. Each piece undergoes rigorous quality checks to ensure you receive nothing but the best.</p>
+        </div>
+
+        <div class="pd-features">
+          <div class="pd-feature">
+            <i class="fa-solid fa-check"></i>
+            <span>Premium Materials</span>
+          </div>
+          <div class="pd-feature">
+            <i class="fa-solid fa-check"></i>
+            <span>Authentic Guarantee</span>
+          </div>
+          <div class="pd-feature">
+            <i class="fa-solid fa-check"></i>
+            <span>Free Shipping over $100</span>
+          </div>
+          <div class="pd-feature">
+            <i class="fa-solid fa-check"></i>
+            <span>30-Day Easy Returns</span>
+          </div>
+        </div>
+
+        <!-- Quantity + Add to Cart -->
+        <div class="pd-actions">
+          <div class="pd-qty">
+            <button class="pd-qty-btn" id="pd-qty-minus" aria-label="Decrease quantity"><i class="fa-solid fa-minus"></i></button>
+            <span class="pd-qty-value" id="pd-qty-value">1</span>
+            <button class="pd-qty-btn" id="pd-qty-plus" aria-label="Increase quantity"><i class="fa-solid fa-plus"></i></button>
+          </div>
+          <button class="btn-primary pd-add-btn" id="pd-add-to-cart" data-product-id="{{ product.id }}">
+            <i class="fa-solid fa-bag-shopping"></i> Add to Cart
+          </button>
+          <button class="pd-wishlist-btn" id="pd-wishlist" aria-label="Add to wishlist">
+            <i class="fa-regular fa-heart"></i>
+          </button>
+        </div>
+
+        <!-- Trust badges -->
+        <div class="pd-trust">
+          <div class="pd-trust-item">
+            <i class="fa-solid fa-truck-fast"></i>
+            <div>
+              <strong>Free Delivery</strong>
+              <span>Orders over $100</span>
+            </div>
+          </div>
+          <div class="pd-trust-item">
+            <i class="fa-solid fa-rotate-left"></i>
+            <div>
+              <strong>30-Day Returns</strong>
+              <span>Hassle-free</span>
+            </div>
+          </div>
+          <div class="pd-trust-item">
+            <i class="fa-solid fa-shield-halved"></i>
+            <div>
+              <strong>2-Year Warranty</strong>
+              <span>Full coverage</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Related Products ===== -->
+{% if related_products %}
+<section class="related-section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-label">You May Also Like</div>
+      <h2 class="section-title">Related Products</h2>
+    </div>
+    <div class="products-grid related-grid">
+      {% for rp in related_products %}
+      <div class="product-card" data-tag="{{ rp.tag }}" id="related-{{ rp.id }}">
+        <a href="{% url 'store:product_detail' rp.slug %}" class="product-card-link">
+          <div class="product-image">
+            <img src="{% static rp.image %}" alt="{{ rp.name }}">
+            {% if rp.badge %}
+            <span class="product-badge {{ rp.badge_class }}">{{ rp.badge }}</span>
+            {% endif %}
+          </div>
+          <div class="product-info">
+            <div class="product-category">{{ rp.category }}</div>
+            <div class="product-name">{{ rp.name }}</div>
+            <div class="product-rating">
+              <span class="stars">{{ rp.stars }}</span>
+              <span class="rating-count">({{ rp.reviews }})</span>
+            </div>
+            <div class="product-price">
+              <span class="price-current">${{ rp.price }}</span>
+              {% if rp.original_price %}
+              <span class="price-original">${{ rp.original_price }}</span>
+              {% endif %}
+            </div>
+          </div>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Quantity selector
+  const qtyValue = document.getElementById('pd-qty-value');
+  const minusBtn = document.getElementById('pd-qty-minus');
+  const plusBtn = document.getElementById('pd-qty-plus');
+  let qty = 1;
+
+  minusBtn.addEventListener('click', () => {
+    if (qty > 1) { qty--; qtyValue.textContent = qty; }
+  });
+  plusBtn.addEventListener('click', () => {
+    if (qty < 10) { qty++; qtyValue.textContent = qty; }
+  });
+
+  // Add to cart
+  const addBtn = document.getElementById('pd-add-to-cart');
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content || '';
+
+  addBtn.addEventListener('click', () => {
+    const productId = parseInt(addBtn.dataset.productId);
+    addBtn.disabled = true;
+    fetch('/cart/add/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+      body: JSON.stringify({ product_id: productId, quantity: qty }),
+    })
+    .then(r => r.json())
+    .then(data => {
+      addBtn.disabled = false;
+      if (data.success) {
+        // Update badge
+        const badge = document.querySelector('.cart-count');
+        if (badge) {
+          badge.textContent = data.cart_count;
+          badge.style.display = 'flex';
+          badge.style.transform = 'scale(1.4)';
+          setTimeout(() => { badge.style.transform = 'scale(1)'; }, 200);
+        }
+        // Button feedback
+        addBtn.innerHTML = '<i class="fa-solid fa-check"></i> Added to Cart!';
+        addBtn.style.background = '#2ecc71';
+        setTimeout(() => {
+          addBtn.innerHTML = '<i class="fa-solid fa-bag-shopping"></i> Add to Cart';
+          addBtn.style.background = '';
+        }, 2000);
+      }
+    })
+    .catch(() => { addBtn.disabled = false; });
+  });
+
+  // Wishlist toggle
+  const wishBtn = document.getElementById('pd-wishlist');
+  wishBtn.addEventListener('click', () => {
+    const icon = wishBtn.querySelector('i');
+    const filled = icon.classList.contains('fa-solid');
+    icon.classList.toggle('fa-regular', filled);
+    icon.classList.toggle('fa-solid', !filled);
+    wishBtn.style.borderColor = filled ? '' : '#dc3c3c';
+    wishBtn.style.color = filled ? '' : '#dc3c3c';
+    wishBtn.style.background = filled ? '' : 'rgba(220,60,60,0.08)';
+  });
+
+  // Thumbnail switcher
+  document.querySelectorAll('.pd-thumb').forEach(thumb => {
+    thumb.addEventListener('click', () => {
+      document.querySelectorAll('.pd-thumb').forEach(t => t.classList.remove('active'));
+      thumb.classList.add('active');
+      document.getElementById('pd-img').src = thumb.dataset.img;
+    });
+  });
+});
+</script>
+{% endblock %}
