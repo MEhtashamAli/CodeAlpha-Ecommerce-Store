@@ -22,7 +22,7 @@ Foey is a modern, full-stack e-commerce platform built with Django. It features 
 
 1. **Clone the repository**:
    ```bash
-   git clone <your-repo-url>
+   git clone https://github.com/MEhtashamAli/CodeAlpha-Ecommerce-Store.git
    ```
 
 2. **Set up a virtual environment**:
