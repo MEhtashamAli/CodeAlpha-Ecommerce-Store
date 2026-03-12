@@ -1,54 +1,46 @@
 # Foey — Trendy Fashion & Lifestyle E-Commerce
 
-Foey is a modern, full-stack e-commerce platform built with Django. It features a sleek, dark-themed user interface, a dynamic shopping cart, product details, user authentication, and a complete checkout process.
+A full-stack e-commerce platform built with **Django**. Features a sleek dark-themed UI, session-based shopping cart, user authentication, product details, and a full checkout process.
 
 ## Features
+- Dynamic Shopping Cart (session-based)
+- User Registration & Login
+- Product Detail Pages
+- Complete Checkout → Order Confirmation Flow
+- Admin Dashboard (manage products, orders, users)
+- Premium dark-mode UI with animations
 
-- **Full-Stack Django Backend**: Robust and scalable architecture.
-- **Dynamic Shopping Cart**: Seamlessly add, remove, and update items.
-- **User Authentication**: Secure registration and login system.
-- **Complete Checkout Flow**: From cart to order confirmation.
-- **Premium UI/UX**: Dark mode design with smooth animations and responsive layout.
-- **Admin Dashboard**: Effortlessly manage products, categories, users, and orders.
-
-## Technologies Used
-
+## Tech Stack
 - **Backend**: Django (Python)
-- **Database**: SQLite (default)
-- **Frontend**: HTML5, Vanilla CSS3, JavaScript (ES6+)
+- **Database**: SQLite
+- **Frontend**: HTML5, Vanilla CSS, JavaScript
 - **Icons**: Font Awesome
 
-## Getting Started
+## 🚀 Deploy on Railway (Recommended)
 
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/MEhtashamAli/CodeAlpha-Ecommerce-Store.git
-   ```
+1. Go to [railway.app](https://railway.app) and sign in with GitHub.
+2. Click **"New Project → Deploy from GitHub repo"**.
+3. Select `MEhtashamAli/CodeAlpha-Ecommerce-Store`.
+4. Railway auto-detects Django and deploys. ✅
+5. In the deployment settings, add environment variable:
+   - `SECRET_KEY` → any random string
 
-2. **Set up a virtual environment**:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+## Run Locally
 
-3. **Install dependencies**:
-   ```bash
-   pip install django
-   ```
+```bash
+# Clone
+git clone https://github.com/MEhtashamAli/CodeAlpha-Ecommerce-Store.git
+cd CodeAlpha-Ecommerce-Store
 
-4. **Run migrations**:
-   ```bash
-   python manage.py migrate
-   ```
+# Install deps
+pip install -r requirements.txt
 
-5. **Start the development server**:
-   ```bash
-   python manage.py runserver
-   ```
+# Migrate & run
+python manage.py migrate
+python manage.py runserver
+```
 
-6. **Access the site**:
-   Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
+Open [http://127.0.0.1:8000](http://127.0.0.1:8000) in your browser.
 
 ## License
-
-This project is licensed under the MIT License.
+MIT

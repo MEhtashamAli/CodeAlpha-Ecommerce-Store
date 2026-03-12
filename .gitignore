@@ -1,4 +1,9 @@
 # Django
+/index.html
+/index.css
+/index.js
+/images/
+
 *.log
 *.pot
 *.pyc
@@ -16,18 +21,6 @@ env/
 # IDEs
 .vscode/
 .idea/
-
-# Static
-static/store/images/*.png
-static/store/images/*.jpg
-static/store/images/*.webp
-!static/store/images/hero_sneakers.png
-!static/store/images/product_watch.png
-!static/store/images/product_bag.png
-!static/store/images/product_headphones.png
-!static/store/images/product_sunglasses.png
-!static/store/images/product_jacket.png
-!static/store/images/banner_sale.png
 
 # Other
 .DS_Store
